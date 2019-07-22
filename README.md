@@ -1,1 +1,1 @@
-![hail](https://media.giphy.com/media/YmuBqMsRYcB9XfJ9wP/giphy.gif)
+![hail](https://media.giphy.com/media/JTb46XPPtKeYHC6Bh4/giphy.gif)
