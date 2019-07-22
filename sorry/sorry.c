@@ -19,35 +19,53 @@
 // all variables should be global for speed
 // zeropage global is even faster
 
-unsigned char i;
-unsigned char ix;
-unsigned char iy;
-unsigned char pos;
-unsigned char src;
-unsigned char dest;
 unsigned char clr;
+unsigned char src; // color at source
+unsigned short int i;
+unsigned short int ix;
+unsigned short int iy;
+unsigned short int pos;  // index
+unsigned short int dest; //dest index
 
 const unsigned char text[]="Hail Satan!"; // zero terminated c string
 
-const unsigned char WIDTH = 16;
-const unsigned char HEIGHT = 15;
+const unsigned char WIDTH = 32;
+const unsigned char HEIGHT = 30;
+
+const unsigned int TEXT_ADDR = NTADR_A(10,14);
+const unsigned int FIRE_ADDR = NTADR_A(0,15);
 
 unsigned char scr[] = {
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-  6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+  6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6
 };
 
 const unsigned char palette[]={
@@ -61,9 +79,14 @@ void draw_bg(void);
 void update_bg(void);
 
 void main (void) {
+  ppu_off(); //  turn on screen
+
   // vram_adr and vram_put only work with screen off
   pal_bg(palette); //  load the BG palette
   set_vram_buffer(); // points ppu update to vram_buffer, do this at least once
+
+  vram_adr(TEXT_ADDR);
+  vram_write(text,sizeof(text));
 
   ppu_on_all(); //  turn on screen
 
@@ -78,22 +101,15 @@ void main (void) {
 }
 
 void update_bg(void) {
-  //sizeof(scr) - WIDTH
-  for(i = 223; i > 0; --i) {
+  //959 - WIDTH
+  for(i=927; i > 500; --i) {
     // src is next row
     src = scr[i + WIDTH];
 
-    if(rand8() > 64) {
-      dest = i - 1;
-    } else {
-      dest = i;
-    }
-    
-    if(rand8() > 64) {
-      clr = src - 1;
-    } else {
-      clr = src;
-    }
+    // wind
+    dest = (rand8() > 64) ?  i - 1 : i;
+    // cooling
+    clr = (rand8() > 64) ?  src - 1 : src;
 
     scr[dest] = clr;
   }
@@ -104,23 +120,12 @@ void draw_bg(void) {
 
   clear_vram_buffer(); // resets the index to zero, to start filling the buffer
 
-  vram_adr(NAMETABLE_A); // start in the top left corner
+  //vram_adr(NAMETABLE_A); // start in the top left corner
+  vram_adr(FIRE_ADDR); // screen is 32 x 30 tiles
 
-  // draw every block twice
-  for(iy=0; iy < HEIGHT; ++iy) {
-    // draw each line twice
-    for(i = 0; i < 2; ++i) {
-      for(ix=0; ix < WIDTH; ++ix) {
-        pos = (iy << 4) + ix;
-        // draw each column twice
-        vram_put(scr[pos]);
-        vram_put(scr[pos]);
-      }
-    }
+  for(i=480; i < 960; ++i) {
+    vram_put(scr[i]);
   }
-
-  vram_adr(NTADR_A(10,14)); // screen is 32 x 30 tiles
-  vram_write(text,sizeof(text));
 
   ppu_on_all(); //  turn on screen
 }
